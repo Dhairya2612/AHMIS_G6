@@ -1,23 +1,44 @@
-import logo from './logo.svg';
-import './App.css';
+import { BrowserRouter, Switch, Route } from "react-router-dom";
+import HospitalWebsite from "./Component/homepagewithlogin/HospitalWebsite";
+import Registeruser from "./Component/Registerpage/registeruser";
+import FooterLv from "./Component/Footer/FooterLv";
+import ForgotPass from "./Component/ForgotPassword/ForgotPass";
+import Comheader from "./Component/CommonHeader/Comheader";
+import Dashboard from "./Component/Dashboard/Dashboard";
+import CreateUser from "./Component/Createusr";
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path="/" component={HospitalWebsite} />
+          <Route exact path="/dashboard" component={Dashboard} />
+        </Switch>
+
+<Switch>
+<Route exact path="/addinguser" component={CreateUser} />     
+
+</Switch>
+
+        <Switch>
+          <Route exact path="/registeruser">
+            <Comheader />
+            <Registeruser />
+          </Route>
+        </Switch>
+
+        <Switch>
+
+          <Route exact path="/resetpassword">
+          <Comheader />
+          <ForgotPass />
+        </Route>
+        </Switch>
+        
+
+        <FooterLv />
+      </BrowserRouter>
     </div>
   );
 }

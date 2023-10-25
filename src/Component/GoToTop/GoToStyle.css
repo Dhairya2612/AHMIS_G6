@@ -1,0 +1,19 @@
+.btn-scrollTop{
+  position: fixed;
+  bottom: 90px;
+  font-size: 3rem;
+  z-index: 1;
+  cursor: pointer;
+  color: #002D62;
+  right: 2%;
+
+  border-radius: 50px;
+  
+  height: 3rem;
+  width: 3rem;
+ 
+}
+.btn-scrollTop :hover{
+  font-size: 3.5rem;
+  transition: ease-in-out 1ms;
+}

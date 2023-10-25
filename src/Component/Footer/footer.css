@@ -1,0 +1,39 @@
+@media screen and (max-width: 900px){
+	.footercls{
+       font-size: 15px;
+
+
+    }
+	
+}
+
+.footercls #creditdiv{
+    text-align: left;
+    
+    width: 25%;
+
+}
+.footercls #logoright{
+    background-color: blue;
+    text-align: right;
+  
+  width: 120px;
+  
+   
+
+}
+@media (max-width: 768px) {
+ .div3{
+
+  display: none;
+
+ }
+  .imgcdac{
+  width: 45rem;
+
+  
+
+ }
+
+ 
+}
