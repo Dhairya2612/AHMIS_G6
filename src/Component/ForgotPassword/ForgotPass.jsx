@@ -76,7 +76,7 @@ const ForgotPass = () => {
               />
             </div>
             <div className="forgot-password-step">
-              <button className="forgot-password-button" onClick={handleNext} disabled={isButtonDisabled}>
+              <button className="forgot-password-button" onClick={handleNext} >
                 Send OTP
               </button>
             </div>

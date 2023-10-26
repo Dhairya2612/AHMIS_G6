@@ -39,7 +39,7 @@ font-size: large;
     box-sizing: border-box;
     outline: none; border: none;
    
-    transition: all .3s ease-in-out; 
+    transition: all .15s ease-in-out; 
     text-decoration: none;
 }
 

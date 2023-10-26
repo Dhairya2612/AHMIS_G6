@@ -5,20 +5,14 @@ import Select from "react-select"; // Import react-select
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { Link } from "react-router-dom";
-import sha256 from 'js-sha256';
+import sha256 from "js-sha256";
 import axios from "axios";
-
-
-
-
-
 
 const RegisterUser = () => {
   const [formData, setFormData] = useState({
     gstr_user_name: "",
     gnum_hospital_code: "",
     gstr_json_data: {
-
       full_name: "",
       mobile_no: "",
       emailID: "",
@@ -26,15 +20,12 @@ const RegisterUser = () => {
       user_type: "",
       user_group: "",
       user_seat: "",
-      entry_date:  new Date().toLocaleDateString(),
+      entry_date: new Date().toLocaleDateString(),
       gender_name: "",
-      password: ""
-    
+      password: "",
     },
-    gnum_userId: '10008',
+    gnum_userId: "10008",
     gstr_status: "0",
-    
-    
   });
 
   const handleChange = (e) => {
@@ -44,6 +35,7 @@ const RegisterUser = () => {
       [name]: value,
     });
   };
+
 
   const handleJsonDataChange = (e) => {
     const { name, value } = e.target;
@@ -56,6 +48,11 @@ const RegisterUser = () => {
     });
   };
 
+
+
+
+
+  
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -78,8 +75,6 @@ const RegisterUser = () => {
       $("#notifielement").show();
     });
   });
-
- 
 
   const [timer, setTimer] = useState(60);
 
@@ -148,10 +143,7 @@ const RegisterUser = () => {
   const [genders, setGenders] = useState([]);
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [passwordError, setPasswordError] = useState("");
-
-  
-
+  const [passwordMismatchError, setPasswordMismatchError] = useState("");
 
   const handlePasswordChange = (event) => {
     const newPassword = event.target.value;
@@ -166,16 +158,11 @@ const RegisterUser = () => {
       },
     }));
     if (newPassword.length < 8) {
-      setPasswordError("Password should be at least 8 characters long.");
+      setPasswordMismatchError("Password should be at least 8 characters long.");
     } else {
-      setPasswordError("");
+      setPasswordMismatchError("");
     }
   };
-
-
-
-
-
 
   const handleConfirmPasswordChange = (e) => {
     const newConfirmPassword = e.target.value;
@@ -183,9 +170,9 @@ const RegisterUser = () => {
 
     // Validate password match
     if (newConfirmPassword !== password) {
-      setPasswordError("Passwords do not match.");
+      setPasswordMismatchError("Passwords do not match.");
     } else {
-      setPasswordError("");
+      setPasswordMismatchError("");
     }
   };
 
@@ -268,11 +255,11 @@ const RegisterUser = () => {
       });
     });
 
-  //   fetch("http://localhost:8082/home/getgenders")
-  //     .then((response) => response.json())
-  //     .then((data) => setGenders(data));
-  // }, []); 
-});
+    //   fetch("http://localhost:8082/home/getgenders")
+    //     .then((response) => response.json())
+    //     .then((data) => setGenders(data));
+    // }, []);
+  });
   const handleRefreshClick = () => {
     setTimeout(() => {
       window.location.reload();
@@ -300,14 +287,10 @@ const RegisterUser = () => {
                   </label>
                   <input
                     type="text"
-                    
                     placeholder="Phone No.*"
                     maxLength="10"
                     name="mobile_no"
-                   
-                    
-                    
-                    value={`${formData.gstr_json_data.mobile_no}`}
+                    value={formData.gstr_json_data.mobile_no}
                     onChange={(e) => {
                       const inputValue = e.target.value;
                       const numericValue = inputValue.replace(/\D/g, "");
@@ -325,6 +308,13 @@ const RegisterUser = () => {
                         document
                           .getElementById("sendOtpButton")
                           .setAttribute("disabled", "disabled");
+                      }
+                    }}
+                    onKeyPress={(e) => {
+                      const numericValue = e.key;
+
+                      if (!/[0-9]/.test(numericValue)) {
+                        e.preventDefault();
                       }
                     }}
                     disabled={phoneInputDisabled}
@@ -428,10 +418,15 @@ const RegisterUser = () => {
                   <input
                     type="text"
                     name="otp"
+                    maxLength={5}
                     placeholder="Enter OTP*"
                     value={otpValue}
                     onChange={(e) => {
-                      setOtpValue(e.target.value);
+                      // Use a regular expression to allow only numeric values
+                      const numericValue = e.target.value.replace(/\D/g, "");
+
+                      // Update the state with the numeric value
+                      setOtpValue(numericValue);
                     }}
                   />
                   <input
@@ -459,7 +454,33 @@ const RegisterUser = () => {
                       name="full_name"
                       placeholder="Enter Full name* "
                       value={formData.gstr_json_data.full_name}
-                      onChange={handleJsonDataChange}
+                      
+                       
+                      onChange={(e) => {
+
+                        handleJsonDataChange(e);
+                        const inputValue = e.target.value;
+                        // Remove spaces and special characters using a regular expression
+                        const sanitizedValue = inputValue.replace(
+                          /[^a-zA-Z0-9_]/g,
+                          ""
+                        );
+                        setFormData({
+                          ...formData,
+                          gstr_json_data: {
+                            ...formData.gstr_json_data,
+                            full_name: sanitizedValue,
+                          },
+                        });
+                      }}
+
+                         
+
+                      
+
+
+
+
                     />
                     <br />{" "}
                   </div>
@@ -498,7 +519,7 @@ const RegisterUser = () => {
                       label: gender.gender,
                     }))}
                   />
-                  <br/>
+                  <br />
 
                   {/* <input
                   type="button"
@@ -513,16 +534,17 @@ const RegisterUser = () => {
                     value="Next"
                   />
                 </fieldset>
-                 
-                
-                <fieldset  className="fieldthree" style={{marginLeft:'-2rem'}}>
+
+                <fieldset
+                  className="fieldthree"
+                  style={{ marginLeft: "-2rem" }}
+                >
                   <h2 className="fs-title">Account Information</h2>
                   <div className="labelone">
-                  <label htmlFor="">User Type</label>
-                  
-                  
+                    <label htmlFor="">User Type</label>
                   </div>
-                  <div className="layerone"
+                  <div
+                    className="layerone"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
                     <Select
@@ -536,9 +558,9 @@ const RegisterUser = () => {
                         { value: "State", label: "State" },
                       ]}
                     />
-                   
-                    <br/> 
-                 
+
+                    <br />
+
                     <Select
                       className="spselect"
                       placeholder="Hospital Code*"
@@ -550,56 +572,59 @@ const RegisterUser = () => {
                         { value: "State", label: "State" },
                       ]}
                     />
-                    
                   </div>
                   <br />
                   <div className="labeltwo">
-                  <label htmlFor="">User Group</label>
+                    <label htmlFor="">User Group</label>
                   </div>
                   <div className="layertwo">
-                  <Select
-                  className="spselect"
-                    name="user_group"
-                    placeholder="Select User Group*"
-                    value={formData.gstr_json_data.user_group}
-                    onChange={handleJsonDataChange}
-                    options={[
-                      { value: "Hospital", label: "Hospital" },
-                      { value: "State", label: "State" },
-                    ]}
-                  />
-                  <br />
-                
-                  <Select
-                  className="spselect"
-                    placeholder="Select User Seat*"
-                    name="user_seat"
-                    value={formData.gstr_json_data.user_seat}
-                    onChange={handleJsonDataChange}
-                    options={[
-                      { value: "Hospital", label: "Hospital" },
-                      { value: "State", label: "State" },
-                    ]}
-                  />
+                    <Select
+                      className="spselect"
+                      name="user_group"
+                      placeholder="Select User Group*"
+                      value={formData.gstr_json_data.user_group}
+                      onChange={handleJsonDataChange}
+                      options={[
+                        { value: "Hospital", label: "Hospital" },
+                        { value: "State", label: "State" },
+                      ]}
+                    />
+                    <br />
+
+                    <Select
+                      className="spselect"
+                      placeholder="Select User Seat*"
+                      name="user_seat"
+                      value={formData.gstr_json_data.user_seat}
+                      onChange={handleJsonDataChange}
+                      options={[
+                        { value: "Hospital", label: "Hospital" },
+                        { value: "State", label: "State" },
+                      ]}
+                    />
                   </div>
-                  <br/> <br/>
-                  <label htmlFor="fname" className="labelthree">UserID
+                  <br /> <br />
+                  <label htmlFor="fname" className="labelthree">
+                    UserID
                   </label>
                   <input
-  type="text"
-  name="gstr_user_name"
-  placeholder="Enter UserID (avoid space)*"
-  value={formData.gstr_user_name}
-  onChange={(e) => {
-    const inputValue = e.target.value;
-    // Remove spaces from the input value
-    const sanitizedValue = inputValue.replace(/\s/g, "");
-    setFormData({
-      ...formData,
-      gstr_user_name: sanitizedValue,
-    });
-  }}
-/>
+                    type="text"
+                    name="gstr_user_name"
+                    placeholder="Enter UserID (avoid space)*"
+                    value={formData.gstr_user_name}
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+                      // Remove spaces and special characters using a regular expression
+                      const sanitizedValue = inputValue.replace(
+                        /[^a-zA-Z0-9_]/g,
+                        ""
+                      );
+                      setFormData({
+                        ...formData,
+                        gstr_user_name: sanitizedValue,
+                      });
+                    }}
+                  />
                   <label htmlFor="password" className="labelthree">
                     Password
                   </label>
@@ -610,7 +635,7 @@ const RegisterUser = () => {
                     value={formData.gstr_json_data.password}
                     onChange={(e) => {
                       handleJsonDataChange(e);
-                      handlePasswordChange(e);
+                      
                     }}
                   />
                   <label htmlFor="confirmpass" className="labelthree">
@@ -620,19 +645,24 @@ const RegisterUser = () => {
                     type="password"
                     name="confirmpass"
                     placeholder="Confirm Password*"
-                    
-                    onChange={handleConfirmPasswordChange}
+                    value={confirmPassword}
+  onChange={(e) => setConfirmPassword(e.target.value)}
                   />
-                  {passwordError && (
-                    <p style={{ color: "red" }}>{passwordError}</p>
-                  )}
+                  {passwordMismatchError && <p style={{ color: "red" }}>{passwordMismatchError}</p>}
+
                   <input
                     type="button"
                     name="previous"
                     className="previous action-button-previous"
                     value="Previous"
                   />
-                   <button type="submit"  className="submitbutton" onClick={handleRefreshClick}>Save Data</button>
+                  <button
+                    type="submit"
+                    className="submitbutton"
+                    onClick={handleRefreshClick}
+                  >
+                    Save Data
+                  </button>
                 </fieldset>
               </form>
             </div>
