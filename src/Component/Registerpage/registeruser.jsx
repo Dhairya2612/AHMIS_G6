@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./registerstyle.css";
 import $ from "jquery";
-import Select from "react-select"; // Import react-select
+import Select from "react-select"; // Import react-select dont remove
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { Link } from "react-router-dom";
+
 import sha256 from "js-sha256";
 import axios from "axios";
 
@@ -36,7 +36,6 @@ const RegisterUser = () => {
     });
   };
 
-
   const handleJsonDataChange = (e) => {
     const { name, value } = e.target;
     setFormData({
@@ -48,11 +47,78 @@ const RegisterUser = () => {
     });
   };
 
+  const [genders, setGenders] = useState([]);
 
+  useEffect(() => {
+    // Fetch data from the API
+    fetch("http://localhost:8082/data/getgenders")
+      .then((response) => response.json())
+      .then((data) => {
+        setGenders(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data from the API: ", error);
+      });
+  }, []);
 
+  const [hospitals, setHospitals] = useState([]);
+  useEffect(() => {
+    // Fetch data from the API
+    fetch("http://localhost:8082/data/gethospitals")
+      .then((response) => response.json())
+      .then((data) => {
+        setHospitals(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data from the API: ", error);
+      });
+  }, []);
 
+  const [userseat, setSeats] = useState([]);
 
-  
+  useEffect(() => {
+    // Fetch data from the API
+    fetch("http://localhost:8082/data/getseats")
+      .then((response) => response.json())
+      .then((data) => {
+        setSeats(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data from the API: ", error);
+      });
+  }, []);
+
+  const [usergroup, setGroup] = useState([]);
+
+  useEffect(() => {
+    // Fetch data from the API
+    fetch("http://localhost:8082/data/getgroups")
+      .then((response) => response.json())
+      .then((data) => {
+        setGroup(data);
+      })
+      .catch((error) => {
+        console.error("Error fetching data from the API: ", error);
+      });
+  }, []);
+
+  // Function to fetch gender data from the API
+  // const fetchGenders = () => {
+  //   fetch("http://localhost:8082/data/getgenders")
+  //     .then((response) => response.json())
+  //     .then((data) => {
+  //       setGenders(data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching gender data:", error);
+  //     });
+  // };
+
+  // useEffect(() => {
+  //   // Fetch gender data when the component mounts
+  //   fetchGenders();
+  // }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -61,7 +127,7 @@ const RegisterUser = () => {
 
     try {
       const response = await axios.post(
-        "http://localhost:8080/home/saveusers",
+        "http://localhost:8082/home/saveusers",
         formData
       );
       console.log("Data saved successfully:", response.data);
@@ -114,7 +180,7 @@ const RegisterUser = () => {
   const [phoneInputDisabled, setPhoneInputDisabled] = useState(false);
   const [otpValue, setOtpValue] = useState("");
   const [isButtonEnabled, setIsButtonEnabled] = useState(false);
-
+  const [passwordError, setPasswordError] = useState("");
   const handleOtpChange = (e) => {
     const inputValue = e.target.value;
     setOtpValue(inputValue);
@@ -139,8 +205,72 @@ const RegisterUser = () => {
       position: toast.POSITION.TOP_CENTER,
     });
   };
+  const handleJsonDataHospital = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      gnum_hospital_code: {
+        ...formData.gnum_hospital_code,
+        [name]: value,
+      },
+    });
+  };
 
-  const [genders, setGenders] = useState([]);
+  const handleHospitalCombinedChange = (selectedOption) => {
+    handleChange(selectedOption);
+  };
+
+  const handleJsonDataChangeSeat = (e) => {
+    // Unique handler for gender
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      gstr_json_data: {
+        ...formData.gstr_json_data,
+        [name]: value,
+      },
+    });
+  };
+
+  const handleJsonDataGroupSeat = (e) => {
+    // Unique handler for gender
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      gstr_json_data: {
+        ...formData.gstr_json_data,
+        [name]: value,
+      },
+    });
+  };
+
+  const handleJsonDataChangeGender = (e) => {
+    // Unique handler for gender
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      gstr_json_data: {
+        ...formData.gstr_json_data,
+        [name]: value,
+      },
+    });
+  };
+
+  const handleCombinedChange = (selectedOption) => {
+    // Call the individual handlers with the selected value
+    handleJsonDataChange(selectedOption);
+    handleJsonDataChangeGender(selectedOption);
+  };
+
+  const handleCombinedSeatChange = (selectedOption) => {
+    handleJsonDataChange(selectedOption);
+    handleJsonDataChangeSeat(selectedOption);
+  };
+  const handleCombinedGroupChange = (selectedOption) => {
+    handleJsonDataChange(selectedOption);
+    handleJsonDataGroupSeat(selectedOption);
+  };
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [passwordMismatchError, setPasswordMismatchError] = useState("");
@@ -148,7 +278,7 @@ const RegisterUser = () => {
   const handlePasswordChange = (event) => {
     const newPassword = event.target.value;
     const hashedPassword = sha256(newPassword); // Hash the password
-    setPassword(newPassword);
+    setPassword(newPassword); // Update the visible password value
 
     setFormData((prevData) => ({
       ...prevData,
@@ -157,23 +287,16 @@ const RegisterUser = () => {
         password: hashedPassword, // Store the hashed password
       },
     }));
-    if (newPassword.length < 8) {
-      setPasswordMismatchError("Password should be at least 8 characters long.");
-    } else {
-      setPasswordMismatchError("");
-    }
   };
 
-  const handleConfirmPasswordChange = (e) => {
-    const newConfirmPassword = e.target.value;
-    setConfirmPassword(newConfirmPassword);
+  const handleFocus = (event) => {
+    // Change input type to "text" on focus to make text visible
+    event.target.setAttribute("type", "text");
+  };
 
-    // Validate password match
-    if (newConfirmPassword !== password) {
-      setPasswordMismatchError("Passwords do not match.");
-    } else {
-      setPasswordMismatchError("");
-    }
+  const handleBlur = (event) => {
+    // Change input type back to "password" on blur
+    event.target.setAttribute("type", "password");
   };
 
   useEffect(() => {
@@ -254,11 +377,6 @@ const RegisterUser = () => {
         return false;
       });
     });
-
-    //   fetch("http://localhost:8082/home/getgenders")
-    //     .then((response) => response.json())
-    //     .then((data) => setGenders(data));
-    // }, []);
   });
   const handleRefreshClick = () => {
     setTimeout(() => {
@@ -285,7 +403,8 @@ const RegisterUser = () => {
                   <label htmlFor="phone" className="labelone">
                     Phone number
                   </label>
-                  <input
+                  <div style={{display:'flex'}}>
+                  <input style={{width:'85%'}}
                     type="text"
                     placeholder="Phone No.*"
                     maxLength="10"
@@ -318,7 +437,7 @@ const RegisterUser = () => {
                       }
                     }}
                     disabled={phoneInputDisabled}
-                  />
+                  /> <button style={{height:'4.5rem',width:'5rem',marginInline:'10px',borderRadius:'10px',backgroundColor:'rgba(104, 85, 224, 1)',cursor:'pointer',color:'white'}}><i class="fa-solid fa-magnifying-glass"></i></button>  </div>
                   <button
                     id="sendOtpButton"
                     style={{
@@ -404,13 +523,7 @@ const RegisterUser = () => {
                   >
                     Use Email
                   </button>
-                  <p
-                    style={{ color: "#32de84", fontSize: "1.3rem" }}
-                    id="notifielement"
-                    hidden
-                  >
-                    OTP is valid for 1 minute
-                  </p>
+                 
                   <br />
                   <label htmlFor="otp" className="labelone">
                     Enter OTP
@@ -454,15 +567,12 @@ const RegisterUser = () => {
                       name="full_name"
                       placeholder="Enter Full name* "
                       value={formData.gstr_json_data.full_name}
-                      
-                       
                       onChange={(e) => {
-
                         handleJsonDataChange(e);
                         const inputValue = e.target.value;
                         // Remove spaces and special characters using a regular expression
                         const sanitizedValue = inputValue.replace(
-                          /[^a-zA-Z0-9_]/g,
+                          /[^a-zA-Z0-9_ ]/g,
                           ""
                         );
                         setFormData({
@@ -473,14 +583,6 @@ const RegisterUser = () => {
                           },
                         });
                       }}
-
-                         
-
-                      
-
-
-
-
                     />
                     <br />{" "}
                   </div>
@@ -509,16 +611,43 @@ const RegisterUser = () => {
                   <label htmlFor="gender" className="labeltwo">
                     Gender
                   </label>
-                  <Select
-                    value={formData.gstr_json_data.gender_name}
-                    onChange={handleJsonDataChange}
-                    placeholder="Select Gender*"
+                  <select
+                    style={{
+                      width: "100%",
+                      height: "5rem",
+                      marginTop: "10px",
+                      marginBottom: "10px",
+                      borderStyle: "solid",
+                      borderWidth: "1px",
+                      borderRadius: "5px",
+                      backgroundColor: "white",
+                      color: "grey",
+                    }}
                     name="gender_name"
-                    options={genders.map((gender) => ({
-                      value: gender.gender,
-                      label: gender.gender,
-                    }))}
-                  />
+                    value={formData.gstr_json_data.gender_name}
+                    onChange={handleCombinedChange}
+                  >
+                    <option value="">Select Gender</option>
+                    {genders.map((gender) => (
+                      <option
+                        key={gender.gstr_gender_name}
+                        value={gender.gstr_gender_name}
+                      >
+                        {gender.gstr_gender_name}
+                      </option>
+                    ))}
+                  </select>
+
+                  {/* <Select
+  value={formData.gstr_json_data.gender_name}
+  onChange={handleCombinedChange}
+  placeholder="Select Gender*"
+  name="gender_name"
+  options={genders.map((gender) => ({
+    value: gender.gender,
+    label: gender.gender,
+  }))}
+/> */}
                   <br />
 
                   {/* <input
@@ -547,7 +676,28 @@ const RegisterUser = () => {
                     className="layerone"
                     style={{ display: "flex", justifyContent: "space-between" }}
                   >
-                    <Select
+                    <select
+                      style={{
+                        width: "40%",
+                        height: "5rem",
+                        marginTop: "10px",
+                        marginBottom: "10px",
+                        borderStyle: "solid",
+                        borderWidth: "1px",
+                        borderRadius: "5px",
+                        backgroundColor: "white",
+                        color: "grey",
+                      }}
+                      name="user_type"
+                      value={formData.gstr_json_data.user_type}
+                      onChange={handleJsonDataChange}
+                    >
+                      <option value="">Select Type</option>
+                      <option value="Hospital Type">Hospital</option>
+                      <option value="State Type">State</option>
+                    </select>
+
+                    {/* <Select
                       className="spselect"
                       placeholder=" Select User Type*"
                       value={formData.gstr_json_data.user_type}
@@ -557,11 +707,38 @@ const RegisterUser = () => {
                         { value: "Hospital", label: "Hospital" },
                         { value: "State", label: "State" },
                       ]}
-                    />
+                    /> */}
 
                     <br />
 
-                    <Select
+                    <select
+                      style={{
+                        width: "40%",
+                        height: "5rem",
+                        marginTop: "10px",
+                        marginBottom: "10px",
+                        borderStyle: "solid",
+                        borderWidth: "1px",
+                        borderRadius: "5px",
+                        backgroundColor: "white",
+                        color: "grey",
+                      }}
+                      name="gnum_hospital_code"
+                      value={formData.gnum_hospital_code}
+                      onChange={handleHospitalCombinedChange}
+                    >
+                      <option value="">Select Hospital</option>
+                      {hospitals.map((hospital) => (
+                        <option
+                          key={hospital.gnum_hospital_code}
+                          value={hospital.gnum_hospital_code}
+                        >
+                          {hospital.gstr_hospital_name}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* <Select
                       className="spselect"
                       placeholder="Hospital Code*"
                       value={formData.gnum_hospital_code}
@@ -571,14 +748,41 @@ const RegisterUser = () => {
                         { value: "Hospital", label: "Hospital" },
                         { value: "State", label: "State" },
                       ]}
-                    />
+                    /> */}
                   </div>
                   <br />
                   <div className="labeltwo">
                     <label htmlFor="">User Group</label>
                   </div>
                   <div className="layertwo">
-                    <Select
+                    <select
+                      style={{
+                        width: "40%",
+                        height: "5rem",
+                        marginTop: "10px",
+                        marginBottom: "10px",
+                        borderStyle: "solid",
+                        borderWidth: "1px",
+                        borderRadius: "5px",
+                        backgroundColor: "white",
+                        color: "grey",
+                      }}
+                      name="user_group"
+                      value={formData.gstr_json_data.user_group}
+                      onChange={handleCombinedGroupChange}
+                    >
+                      <option value="">Select Your Group</option>
+                      {usergroup.map((group) => (
+                        <option
+                          key={group.gstr_group_name}
+                          value={group.gstr_group_name}
+                        >
+                          {group.gstr_group_name}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* <Select
                       className="spselect"
                       name="user_group"
                       placeholder="Select User Group*"
@@ -588,10 +792,37 @@ const RegisterUser = () => {
                         { value: "Hospital", label: "Hospital" },
                         { value: "State", label: "State" },
                       ]}
-                    />
+                    /> */}
                     <br />
 
-                    <Select
+                    <select
+                      style={{
+                        width: "40%",
+                        height: "5rem",
+                        marginTop: "10px",
+                        marginBottom: "10px",
+                        borderStyle: "solid",
+                        borderWidth: "1px",
+                        borderRadius: "5px",
+                        backgroundColor: "white",
+                        color: "grey",
+                      }}
+                      name="user_seat"
+                      value={formData.gstr_json_data.user_seat}
+                      onChange={handleCombinedSeatChange}
+                    >
+                      <option value="">Select Seat</option>
+                      {userseat.map((user) => (
+                        <option
+                          key={user.gstr_seat_description}
+                          value={user.gstr_seat_description}
+                        >
+                          {user.gstr_seat_description}
+                        </option>
+                      ))}
+                    </select>
+
+                    {/* <Select
                       className="spselect"
                       placeholder="Select User Seat*"
                       name="user_seat"
@@ -601,7 +832,7 @@ const RegisterUser = () => {
                         { value: "Hospital", label: "Hospital" },
                         { value: "State", label: "State" },
                       ]}
-                    />
+                    /> */}
                   </div>
                   <br /> <br />
                   <label htmlFor="fname" className="labelthree">
@@ -631,12 +862,11 @@ const RegisterUser = () => {
                   <input
                     type="password"
                     name="password"
-                    placeholder="Password (Length should be longer than 8 characters)*"
-                    value={formData.gstr_json_data.password}
-                    onChange={(e) => {
-                      handleJsonDataChange(e);
-                      
-                    }}
+                    placeholder="Password*"
+                    value={password} // Use the 'password' state for the input value
+                    onChange={handlePasswordChange}
+                    onFocus={handleFocus}
+                    onBlur={handleBlur}
                   />
                   <label htmlFor="confirmpass" className="labelthree">
                     Confirm
@@ -645,11 +875,10 @@ const RegisterUser = () => {
                     type="password"
                     name="confirmpass"
                     placeholder="Confirm Password*"
-                    value={confirmPassword}
-  onChange={(e) => setConfirmPassword(e.target.value)}
                   />
-                  {passwordMismatchError && <p style={{ color: "red" }}>{passwordMismatchError}</p>}
-
+                  {passwordMismatchError && (
+                    <p style={{ color: "red" }}>{passwordMismatchError}</p>
+                  )}
                   <input
                     type="button"
                     name="previous"

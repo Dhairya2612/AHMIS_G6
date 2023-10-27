@@ -6,6 +6,7 @@ import ForgotPass from "./Component/ForgotPassword/ForgotPass";
 import Comheader from "./Component/CommonHeader/Comheader";
 import Dashboard from "./Component/Dashboard/Dashboard";
 import CreateUser from "./Component/Createusr";
+import Home from "./Component/homepagewithlogin/Home";
 
 function App() {
   return (
@@ -13,7 +14,10 @@ function App() {
       <BrowserRouter>
         <Switch>
           <Route exact path="/" component={HospitalWebsite} />
-          <Route exact path="/dashboard" component={Dashboard} />
+          <Route exact path="/dashboard">
+            <Dashboard/>
+            
+          </Route>
         </Switch>
 
 <Switch>
@@ -34,6 +38,13 @@ function App() {
           <Comheader />
           <ForgotPass />
         </Route>
+        </Switch>
+        <Switch>
+          
+          <Route exact path="/home">
+            <Home/>
+          
+          </Route>
         </Switch>
         
 

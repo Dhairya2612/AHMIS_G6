@@ -1,0 +1,84 @@
+/* Add these styles to your CSS file */
+
+/* Navbar styles */
+.homenav {
+    background-color: #18454A;
+    color: #fff;
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px;
+    position: relative;
+    top: 0;
+    left: 0;
+    width: 100%;
+  }
+  
+  .logo {
+    font-size: 24px;
+    font-weight: bold;
+  }
+  
+  .nav-links {
+    list-style: none;
+    display: flex;
+  }
+  
+  .nav-links li {
+    margin-right: 20px;
+    cursor: pointer;
+  }
+  
+  /* Content styles */
+  .content {
+    padding: 80px 20px 20px;
+    margin-top: 60px;
+  }
+  .nav-links .user-management {
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    color: #c0a94b; /* Yellow color */
+  }
+  
+  
+  /* Media queries for responsiveness */
+  @media (max-width: 768px) {
+    .navbar {
+      flex-direction: column;
+      align-items: center;
+    }
+  
+    .nav-links {
+      margin-top: 10px;
+    }
+  
+    .nav-links li {
+      margin-right: 10px;
+    }
+
+
+    /* Second Navbar Styles */
+.nestedNav{
+  background-color: #f04444; /* Customize the background color */
+  color: #a50505;
+  padding: 10px 20px;
+  position: fixed;
+  top: 60px; /* Adjust the top position to create separation */
+  left: 0;
+  width: 100%;
+  z-index: 1; /* Ensure the second navbar is below the first navbar */
+}
+
+.modulenav-links {
+  list-style: none;
+  display: flex;
+  margin: 0; /* Reset margin for list items */
+  padding: 0; /* Reset padding for list items */
+}
+
+.modulenav li {
+  margin-right: 20px;
+  cursor: pointer;
+  }
+}
+  

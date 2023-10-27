@@ -1,55 +1,160 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 import { Alert } from "react-bootstrap";
 import { userLogin } from "../api/authenticationService";
 import { connect } from "react-redux";
 import { authenticate, authFailure, authSuccess } from "../redux/authActions";
-import "./css/style.css";
+import "./css/style.css"; // Import your CSS file here
 import "./js/script";
 import Goto from "../GoToTop/Goto";
 import Slider from "../Slider/Slider";
 import Galleryslider from "../Slider/galleryslider";
-import { useHistory } from "react-router-dom";
+import { useHistory, useNavigate } from "react-router-dom";
+import { ToastContainer, toast } from "react-toastify";
+import jsSHA from "jssha";
 
 function App({ authenticate, setUser, loginFailure, error }) {
+  const history = useHistory();
+  const [username, setName] = useState("");
+  const [password, setPassword] = useState("");
+  //const history = useNavigate();
+  const [sessionAttribute, setSessionAttribute] = useState("");
+  const [sessionsalt, setSessionsalt] = useState("");
   const [values, setValues] = useState({
     username: "",
-    password: "",
+    pwd: "",
+    sessionsalt: "",
   });
-  const history = useHistory();
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    authenticate();
+  // //added for captcha on 25/10/2023 by kanhai
+  // const [captchaInput, setCaptchaInput] = useState("");
+  // const [captchaText, setCaptchaText] = useState(""); // Define captchaText state
+  // const [captchaImage, setCaptchaImage] = useState(""); // Define captchaImage state
 
-    userLogin(values)
+  //added by kanhai on 19/10/2023
+
+  useEffect(() => {
+    // Make an HTTP request to fetch the attribute from the backend
+    // alert("inside the useEffect")
+    console.log("Making GET request to /setSessionAttribute");
+    axios
+      .get("http://localhost:8082/auth/setSessionAttribute")
       .then((response) => {
-        if (response.status === 200) {
-          setUser(response.data);
-          // Redirect to the dashboard or the desired page
-          // You can use React Router for this
-          const token = localStorage.getItem("USER_KEY");
-
-          if (token) {
-            // Redirect to the /dashboard page
-            history.push("/dashboard");
-          }
-        } else {
-          loginFailure("Something Wrong! Please Try Again");
-        }
+        console.log("Response:", response.data);
+        setSessionAttribute(response.data);
+        setSessionsalt(response.data);
+        setValues((prevState) => ({
+          ...prevState,
+          sessionsalt: response.data,
+        }));
       })
-      .catch((err) => {
-        if (err && err.response) {
-          switch (err.response.status) {
-            case 401:
-              loginFailure("Authentication Failed. Wrong Credentials");
-              break;
-            default:
-              loginFailure("Something Wrong! Please Try Again");
-          }
-        } else {
-          loginFailure("Something Wrong! Please Try Again");
-        }
+      .catch((error) => {
+        console.error("Error fetching session attribute:", error);
       });
-  };
+  }, []);
+
+  function validate(isSHA2) {
+    //alert('loginLogin'+isSHA2);
+
+    if (!securePassword(isSHA2)) {
+      /*document.getElementById("divElementErrorsId").innerHTML = "Faced Some Unknown Problem. Please try Again!";*/
+      document.getElementsByName("username")[0].value = "";
+      document.getElementsByName("password")[0].value = "";
+      return false;
+    }
+
+    // alert("kkkk2222");
+    return true;
+  }
+
+  function securePassword(isSHA2) {
+    //alert('B');
+    var hashValue = "",
+      objPassHash = "",
+      objPassHash1 = "";
+    try {
+      if (isSHA2 && isSHA2 == "0") {
+        //alert("kkkkif");
+        objPassHash = new jsSHA("SHA-1", "TEXT", 1); //new jsSHA(document.getElementsByName("varPassword")[0].value+document.getElementsByName("varUserName")[0].value, "ASCII");
+        objPassHash.update(
+          document.getElementsByName("password")[0].value +
+            document.getElementsByName("username")[0].value,
+          "ASCII"
+        );
+        hashValue = objPassHash.getHash("HEX");
+
+        objPassHash1 = new jsSHA("SHA-1", "TEXT", 1);
+        //objPassHash1.update(hashValue + sessionToken);
+      } else {
+        //alert("kkkkelse");
+        objPassHash = new jsSHA("SHA-512", "TEXT", 1);
+        objPassHash.update(
+          document.getElementsByName("password")[0].value +
+            document.getElementsByName("username")[0].value
+        );
+        hashValue = objPassHash.getHash("HEX");
+        //alert("Hashed value : "+hashValue);
+        objPassHash1 = new jsSHA("SHA-512", "TEXT", 1);
+        objPassHash1.update(hashValue + sessionsalt);
+      }
+    } catch (e) {
+      //alert("kkkk");
+      //alert(e.message);
+      //alert("kkkkkkkkk");
+      return false;
+    }
+    try {
+      if (isSHA2 && isSHA2 == "0") hashValue = objPassHash1.getHash("HEX");
+      else hashValue = objPassHash1.getHash("HEX");
+    } catch (e) {
+      return false;
+    }
+
+    // alert("Encrypted Password in SHA-512 encoding is "+hashValue);
+    //swal({		  text: "Encrypted Password in SHA-512 encoding is !"+hashValue,		  button:"OK",				});
+
+    //alert('E'+hashValue);
+    document.getElementsByName("password")[0].value = hashValue;
+    return true;
+  }
+
+  // const handleSubmit = (evt) => {
+  //   //added by kanhai
+  //   var pwd =document.getElementsByName("password")[0].value;
+  //   console.log("Password entered by user: " + pwd);
+
+  //   evt.preventDefault();
+  //   authenticate();
+
+  //   userLogin(values)
+  //     .then((response) => {
+  //       if (response.status === 200 &&  response.data && response.data.jwtToken) {
+  //         setUser(response.data);
+  //         // Redirect to the dashboard or the desired page
+  //         // You can use React Router for this
+  //         const token = sessionStorage.getItem('USER_KEY');
+
+  //         if (token) {
+  //           // Redirect to the /dashboard page
+  //           history.push('/dashboard');
+  //         }
+  //       } else {
+  //         loginFailure('Something Wrong! Please Try Again');
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       if (err && err.response) {
+  //         switch (err.response.status) {
+  //           case 401:
+  //             loginFailure("Authentication Failed. Wrong Credentials");
+  //             break;
+  //           default:
+  //             loginFailure("Something Wrong! Please Try Again");
+  //         }
+  //       } else {
+  //         loginFailure("Something Wrong! Please Try Again");
+  //       }
+  //     });
+  // };
 
   const handleChange = (e) => {
     e.persist();
@@ -57,6 +162,58 @@ function App({ authenticate, setUser, loginFailure, error }) {
       ...values,
       [e.target.name]: e.target.value,
     }));
+  };
+
+  const handleLogin = () => {
+    // alert("inside the handalelogin")
+    //const { username, sessionsalt } = jwtRequest;
+    var pwd = document.getElementsByName("password")[0].value;
+    alert("inside the handalelogin" + pwd);
+    console.log("Password entered by user: " + pwd);
+
+    alert("passowrd before is " + pwd);
+    axios
+      .post("http://localhost:8082/auth/login", { username, pwd, sessionsalt })
+      .then((response) => {
+        try {
+          console.log("====>>>" + response);
+          console.log("====>>>" + response.status);
+          console.log("====>>>" + response.statusText);
+          console.log("====>>>" + response.data);
+          console.log("=>>>" + response.data.jwtToken);
+          console.log("====>>>" + response.data.token);
+          alert("inside the login");
+          if (
+            response.status === 200 &&
+            response.data &&
+            response.data.jwtToken
+          ) {
+            // Store the token in session storage
+            sessionStorage.setItem("jwtToken", response.data.jwtToken);
+            alert(response.data.jwtToken);
+
+            console.log("Login successful");
+            toast.success("Login successful");
+
+            if (response.data.jwtToken) {
+              // Redirect to the /dashboard page
+              history.push("/Home");
+            } else {
+              loginFailure("Something Wrong! Please Try Again");
+            }
+          } else {
+            console.log("Login failed: JWT token not generated");
+            toast.error("Login failed: JWT token not generated");
+          }
+        } catch (error) {
+          console.log(error);
+          toast.error("Login failed");
+        }
+      })
+      .catch((error) => {
+        toast.error("An error occurred");
+        console.error(error);
+      });
   };
 
   return (
@@ -79,9 +236,7 @@ function App({ authenticate, setUser, loginFailure, error }) {
             <li>
               <a href="#services">About</a>
             </li>
-            <li>
-              <a href="loginBoard"></a>
-            </li>
+            
             <li>
               <a href="#about">Features</a>
             </li>
@@ -91,6 +246,7 @@ function App({ authenticate, setUser, loginFailure, error }) {
             <li>
               <a href="#contactus">Contact</a>
             </li>
+           
           </ul>
         </nav>
         <div id="menu-btn" className="fas fa-bars"></div>
@@ -110,7 +266,9 @@ function App({ authenticate, setUser, loginFailure, error }) {
         <div style={{ marginTop: "-8rem" }}>
           <div className="container">
             <div className="login-content">
-              <form className="my-login-validation" onSubmit={handleSubmit}>
+              {" "}
+              {/*  onSubmit={handleSubmit}  */}
+              <form className="my-login-validation">
                 <img
                   src={
                     "https://cdn.icon-icons.com/icons2/2249/PNG/512/account_edit_outline_icon_140057.png"
@@ -132,8 +290,9 @@ function App({ authenticate, setUser, loginFailure, error }) {
                       required
                       autoCapitalize="none"
                       autoCorrect="off"
-                      value={values.username}
-                      onChange={handleChange}
+                      //value={username}
+                      onChange={(e) => setName(e.target.value)}
+                      //onChange={handleChange}
                     />
                   </div>
                 </div>
@@ -146,38 +305,40 @@ function App({ authenticate, setUser, loginFailure, error }) {
                       type="password"
                       className="input"
                       placeholder="Password"
-                      minLength={8}
+                      //minLength={8}
                       name="password"
                       required
-                      value={values.password}
-                      onChange={handleChange}
+                      //value={password}
+                      // onChange={handleChange}
+                      onChange={(e) => setPassword(e.target.value)}
                     />
                   </div>
                 </div>
-              <br/>
+                <br/>
+                 <div style={{display:'flex', justifyContent:'space-between'}}>
+                <a href="registeruser"  className="links">
+                  Sign In
+                </a>
+                    
+                <a href="/resetpassword"  className="links">
+                  Forgot Password?
+                </a></div>
 
-              <div>
-                 
-                 <a href="/registeruser"  className="links">
-                   Sign Up
-                 </a>
-
-                 <a href="/resetpassword" className="links">
-                   Forgot Password?
-                 </a>
-              </div>
-              <div>
-                <input type="submit" className="btnLog" value="Login" />
+                <input
+                  type="submit"
+                  className="btnLog"
+                  onClick={() => {
+                    validate("512");
+                    handleLogin();
+                  }}
+                  value="Login"
+                />
                 {error && (
                   <Alert style={{ marginTop: "20px" }} variant="danger">
                     {error}
                   </Alert>
                 )}
-                </div>
-                
               </form>
-              
-              
             </div>
           </div>
         </div>
