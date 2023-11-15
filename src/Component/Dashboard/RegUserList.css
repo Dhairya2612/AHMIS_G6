@@ -1,0 +1,198 @@
+.master-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    height: 80rem;
+  }
+  
+  .newUser {
+    width: 190%; 
+    max-width: 100rem; 
+  }
+  
+  .table-box {
+    width: 150rem;
+    height: fit-content;
+    margin-left: -25rem;
+    margin-bottom: -0.5rem;
+    margin-right: 1.5rem;
+    font-size: 1.5rem;
+    box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+    overflow-y:auto ;
+    border-radius: 5px;
+  }
+  
+  .sticky-header {
+    position: static;
+    top: 1rem;
+    background-color: #3d5a80; /* Adjust the background color as needed */
+  }
+  
+  .vertical-line {
+    width: 30px; /* Corrected the width value */
+  }
+  
+  .f1-table .vertical-line {
+    border-right: 0.5px solid black;
+    margin-inline: 10px;
+  }
+  
+  thead.sticky-header th {
+    min-width: 100px; /* Adjust the width as needed */
+    height: 30px;
+    text-align: center;
+  }
+  
+  .f1-table {
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: normal;
+    border: none;
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 100%;
+    white-space: nowrap;
+    background-color: white;
+    font-family: 'Nunito', Arial, Verdana;
+    overflow: auto;
+  }
+  
+  .f1-table td, .fl-table th {
+    text-align: center;
+    width: fit-content;
+  }
+  
+  .f1-table td {
+    border-right: 1px solid #f8f8f8;
+    font-size: 14px;
+    padding: 4px;
+    width: fit-content;
+  }
+  
+  .f1-table thead th {
+    color: #ffffff;
+    background: #3d5a80;
+    padding: 5px;
+  }
+  
+  .f1-table thead th:nth-child(odd) {
+    color: #ffffff;
+    background: #3d5a80;
+  }
+  
+  .f1-table tr:nth-child(even) {
+    background: #F8F8F8;
+  }
+  
+  .approve-button, .button2, .button3, .button4 {
+    padding: 9px 16px;
+    margin: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 12px;
+    text-decoration: none;
+  }
+  
+  .approve-button:hover {
+    background-color: #70e670;
+    color: black;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+    
+  }
+
+.main-main-container button:disabled{
+  opacity: 0.6;
+  background-color: dimgray;
+}
+
+
+
+
+  .button2:hover {
+    background-color: red;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  }
+  .button3:hover {
+    background-color:#2a507a ;
+    box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  }
+  .button4:hover {
+  background-color:blue ;
+  box-shadow: rgba(0, 0, 0, 0.16) 0px 10px 36px 0px, rgba(0, 0, 0, 0.06) 0px 0px 0px 1px;
+  }
+  .reject-modal {
+   position: fixed;
+    top: 45%;
+    left: 50%;
+    transform: translate(-50%, -50%); 
+    background-color: #fff;
+    border: 1px solid #ccc;
+    box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+    max-width: 500px;
+    width: 100%;
+    border-radius: 12px;
+    
+  }
+  
+  .reject-modal .modal-header {
+    background-color: #3d5a80; /* Red background color for the header */
+    color: #fff; /* Text color for the header */
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
+  }
+  
+  .reject-modal .modal-title {
+    font-weight: bold;
+    font-size: 20px;
+    text-align: center;
+  }
+  
+  .reject-modal .modal-footer {
+    justify-content: space-between;
+    border-top: 1px solid #ccc;
+  }
+  
+  .close{
+    padding: 9px 16px;
+    margin: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 12px;
+    text-decoration: none;
+  }
+  .reject{
+    padding: 9px 16px;
+    margin: 5px 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    border-radius: 12px;
+    text-decoration: none;
+  }
+  
+  .modelfooter{
+    padding: 10px ;
+  }
+
+  .reject{
+    background-color: red;
+  }
+
+  .reject:hover {
+    background-color: #E34234;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+  .close:hover {
+    background-color:#2a507a ;
+    box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
+  }
+  

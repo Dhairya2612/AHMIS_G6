@@ -34,7 +34,7 @@ const ForgotPass = () => {
 
   return (
     <div id="forgot-password-container">
-      <div className="forgot-password-form" style={{ marginTop: '-90px' }}>
+      <div className="forgot-password-form" style={{ marginTop: '-40px' }}>
         <h2 className="forgot-password-heading">Forgot Password</h2>
         <div className="forgot-password-message">{message}</div>
         {step === 1 && (
@@ -44,6 +44,7 @@ const ForgotPass = () => {
               <div className="toggle-switch">
                 <div style={{ display: 'flex', marginInline: '4.8rem', marginTop: '1rem' }}>
                   <button
+                  id='phone-button'
                     className={isPhoneNumber ? 'recovery-active' : 'recovery-inactive'}
                     onClick={() => setIsPhoneNumber(true)}
                   >
@@ -52,6 +53,7 @@ const ForgotPass = () => {
                   <br />
                   <br />
                   <button
+                  id='email-button'
                     className={!isPhoneNumber ? 'recovery-active' : 'recovery-inactive'}
                     onClick={() => setIsPhoneNumber(false)}
                   >

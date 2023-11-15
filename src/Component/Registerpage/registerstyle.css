@@ -38,6 +38,8 @@
 }
 .labelone{
     display: flex;
+    margin-right: 33rem;
+  
    
    
 }
@@ -54,32 +56,17 @@
     justify-content: space-between;
 }
 .fieldthree{
-    width: 200%;
+   
+    margin-left: 5rem;
    
 }
-
-
-.logbutton{
-    cursor: pointer;
-    border: 0;
-    border-radius: 5px;
-    font-weight: 600;
-    margin: 0 10px;
-    width: 9rem;
-    padding: 7px;
-   
-    transition: 0.2s;
-    color: rgb(104, 85, 224);
-    background-color: rgba(255, 255, 255, 1);
-    border: 2px solid rgba(104, 85, 224, 1);
+#check_otp:disabled {
+    opacity: 0.6 !important;
 }
-.logbutton:hover {
-    color: white;
-    width:100px;
-    box-shadow: 0 0 20px rgba(104, 85, 224, 0.6);
-    background-color: rgba(104, 85, 224, 1);
-    
+.submitbutton:disabled {
+    opacity: 0.6;
   }
+
   .disabled-button {
     opacity: 0.6;
     cursor: not-allowed;
@@ -232,11 +219,13 @@ body {
 
 /*progressbar*/
 #progressbar {
-    width: 200%;
+    width: 120%;
     margin-bottom: 30px;
     overflow: hidden;
     /*CSS counters to number the steps*/
     counter-reset: step;
+    font-size: small;
+    margin-inline: 8rem;
     
 }
 
@@ -289,6 +278,29 @@ body {
     color: white;
 }
 
+
+
+.labelright{
+
+    display: flex;
+    justify-content:space-between;
+    margin-top: -17px;
+    margin-right: -110px;
+
+
+
+}
+
+#useEmailButton:hover{
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #2098ce;
+    
+    
+}
+#resendButton:hover{
+    box-shadow: 0 0 0 2px white, 0 0 0 3px #2098ce;
+}
+
+
 .dropdownregi{
     width: 100%;
     height: 3rem;
@@ -306,17 +318,14 @@ justify-content: space-between;}
 
 
 
- .labelone{
-    margin-right: 33rem;
-    font-size: 1.4rem;
-}
+ 
 .labeltwo{
     margin-right: 37rem;
-    font-size: 1.4rem;
+    
 }
 .labelthree{
     margin-right: 59rem;
-    font-size: 1.4rem;
+  
 } 
 
 
@@ -345,6 +354,12 @@ justify-content: space-between;}
 
 
 
+    
+
+
+
+
+
 /* For mobile screens */
 @media (max-width: 768px) {
     .headercss {
@@ -362,16 +377,53 @@ justify-content: space-between;}
   
     /* Add more styles as needed */
   }
+
+
+
+
+
+
+
   
   /* For tablet screens */
-  @media (min-width: 769px) and (max-width: 1024px) {
-    /* Adjust styles for tablet screens here */
+  @media (min-width: 810px) and (max-width: 1024px) {
+     .themain{margin-inline: 8%;}
+   
   }
   
   /* For larger screens (PC) */
-  @media (min-width: 1025px) {
-    /* Adjust styles for larger screens (PC) here */
+  @media (max-width: 1025px) {
+     #progressbar{width: 130%;}
+     .reguser{
+        margin-left: 14% ;
+        margin-right: -80%;
+     }
+     .submitbutton{width:100px;}
+      
+     
   }
   
+  @media (max-width: 700px) {
+    #progressbar{width: 120%;}
+    .reguser{
+       margin-left: 13% ;
+    }
+    
+ }
 
+ @media (max-width: 600px) {
+    #progressbar{width: 120%;}
+    .reguser{
+       margin-left: -11% ;
+      
+    }
+ }
+ @media (max-width: 400px) {
+    #progressbar{width: 100%}
+    .reguser{
+       margin-left: -19% ;
+      
+    }
+ }
+ 
   

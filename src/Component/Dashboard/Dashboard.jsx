@@ -1,269 +1,433 @@
-import React from 'react'
-import { useState } from "react";
-import { Button, Container } from 'react-bootstrap';
+//Programmed By Anjali Kushwaha
+//Date: 18/10/2023
+//UserApproval Dashboard
+
+import React, { useState, useEffect } from 'react';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useDispatch } from 'react-redux';
+import axios from 'axios';
+import './RegUserList.css';
 
-import {fetchUserData} from '../api/authenticationService';
-
-
-
+import { Modal ,Button} from 'react-bootstrap';
+import withSessionTimeoutCheck from '../withSessionTimeoutCheck'
 
 const Dashboard = (props) => {
-    const dispatch=useDispatch();
-const [loading,setLoading]=useState(false);
-const [data,setData]=useState({});
+  const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false);
+  const [data, setData] = useState({});
 
-React.useEffect(()=>{
-    fetchUserData().then((response)=>{
-        setData(response.data);
-        alert("fatch token " +response.data)
-    }).catch((e)=>{
-        
-       //  localStorage.clear();
-        //props.history.push('/');
-    })
-},[])
-
-    const [style, setStyle] = useState("navbar-nav bg-gradient-dark sidebar sidebar-dark accordion");
-
-    const changeStyle = () => {
-        if (style == "navbar-nav bg-gradient-dark sidebar sidebar-dark accordion")
-        {
-            setStyle("navbar-nav bg-gradient-dark sidebar sidebar-dark accordion toggled");
-        }
-        else{
-            setStyle("navbar-nav bg-gradient-dark sidebar sidebar-dark accordion")
-        }
-    };
-    const changeStyle1 = () => {
-        if (style == "navbar-nav bg-gradient-dark sidebar sidebar-dark accordion")
-        {
-            setStyle("navbar-nav bg-gradient-dark sidebar sidebar-dark accordion toggled1");
-        }
-        else{
-            setStyle("navbar-nav bg-gradient-dark sidebar sidebar-dark accordion")
-        }
-    };
-    
-    const logOut=()=>{
-       
-        localStorage.clear();
-        props.history.push('/');
-       
-       
-
-    }
-
-    return (
-        <div >
-            <body id="page-top">
-
-                {/*  <!-- Page Wrapper --> */}
-                <div id="wrapper" >
-
-                    {/*  <!-- Sidebar --> */}
-                    <ul className={style} id="accordionSidebar" >
-
-                        {/*  <!-- Sidebar - Brand --> */}
-                        <a className="sidebar-brand d-flex align-items-center justify-content-center" href="#">
-                            <div className="sidebar-brand-icon ">
-                            <i class="fas fa-user-shield"></i>
-                            </div>
-                            <div className="sidebar-brand-text mx-3">Welcome </div>
-                            <div className="text-center d-none d-md-inline">
-                            <button className="rounded-circle border-0" id="sidebarToggle" onClick={changeStyle}></button>
-                        </div>
-                        </a>
-
-                        {/*   <!-- Divider --> */}
-                        <hr className="sidebar-divider my-0" />
-
-                        {/*  <!-- Nav Item - Dashboard --> */}
-                        <li className="nav-item active">
-                            <a className="nav-link" href="index.html">
-                                
-                                <span  style={{fontSize:'1rem'}}>Dashboard</span></a>
-                        </li>
-
-                        {/*  <!-- Divider --> */}
-                        <hr className="sidebar-divider" />
-
-                        {/*   <!-- Heading --> */}
-                  
-
-                        {/*  <!-- Nav Item - Pages Collapse Menu --> */}
-                        <li className="nav-item">
-                            <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
-                                aria-expanded="true" aria-controls="collapseTwo" >
-                              <i class="fas fa-users"></i>
-                                <span  style={{fontSize:'14px'}}>User Management</span>
-                            </a>
-                            <div id="collapseTwo" className="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
-                                <div className="bg-white py-2 collapse-inner rounded"  style={{fontSize:'12px'}}>
-                                <h6 className="collapse-header">User Management:</h6>
-                                <a className="collapse-item" href="cards.html">Group Master</a>
-                                    <a className="collapse-item" href="buttons.html">Seat Master</a>
-                                    <a className="collapse-item" href="cards.html">User Master</a>
-                                    <a className="collapse-item" href="cards.html">Reset User Password</a>
-                                    <a className="collapse-item" href="cards.html">Reset Admin Password</a>
-                                </div>
-                            </div>
-                        </li>
-
-                        {/* <!-- Nav Item - Utilities Collapse Menu --> */}
-                        <li className="nav-item">
-                            <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseUtilities"
-                                aria-expanded="true" aria-controls="collapseUtilities">
-                             <i class="fas fa-user-tag"></i>
-                                <span  style={{fontSize:'14px'}}>Role Management</span>
-                            </a>
-                            <div id="collapseUtilities" className="collapse" aria-labelledby="headingUtilities"
-                                data-parent="#accordionSidebar">
-                                <div className="bg-white py-2 collapse-inner rounded" style={{fontSize:'12px'}}>
-                                    <h6 className="collapse-header">Role Management:</h6>
-                                    <a className="collapse-item" href="utilities-color.html">Role Master</a>
-                                    <a className="collapse-item" href="utilities-border.html">Group Role Master</a>
-                                    <a className="collapse-item" href="utilities-animation.html">Role Menu Master</a>
-                                    <a className="collapse-item" href="utilities-other.html">Seat Role Master</a>
-                                    <a className="collapse-item" href="utilities-other.html">Seat Permission Master</a>
-                                </div>
-                            </div>
-                        </li>
-
-                     
-
-                        {/*  <!-- Nav Item - Pages Collapse Menu --> */}
-                        <li className="nav-item">
-    <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseLogManagement"
-        aria-expanded="false" aria-controls="collapseLogManagement">
-        <i class="fas fa-clipboard-list"></i>
-        <span  style={{fontSize:'14px'}}>Log Management</span>
-    </a>
-    <div id="collapseLogManagement" className="collapse" aria-labelledby="headingLogManagement"
-        data-parent="#accordionSidebar">
-        <div className="bg-white py-2 collapse-inner rounded" style={{fontSize:'12px'}}>
-            <h6 className="collapse-header">Logs Management:</h6>
-            <a className="collapse-item" href="login.html">User Profile</a>
-            <a className="collapse-item" href="register.html">User Log Report</a>
-            <a className="collapse-item" href="forgot-password.html">User Management Tree View</a>
-            <a className="collapse-item" href="register.html">Seat Role Audit Log Report</a>
-            <a className="collapse-item" href="register.html">Role Menu Audit Log Report</a>
-            <a className="collapse-item" href="register.html">User Audit Log Report</a>
-            <a className="collapse-item" href="register.html">Seat Permission Audit Report</a>
-        </div>
-    </div>
-</li>
-
-<li className="nav-item">
-    <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseSettings"
-        aria-expanded="false" aria-controls="collapseSettings">
-        <i class="fas fa-cogs"></i>
-        <span  style={{fontSize:'14px'}}>Settings</span>
-    </a>
-    <div id="collapseSettings" className="collapse" aria-labelledby="headingSettings"
-        data-parent="#accordionSidebar">
-        <div className="bg-white py-2 collapse-inner rounded" style={{fontSize:'12px'}}>
-            <h6 className="collapse-header">Settings:</h6>
-            <a className="collapse-item" href="login.html">Hospital Master</a>
-        </div>
-    </div>
-</li>
-
-<li className="nav-item">
-    <a className="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseModuleManagement"
-        aria-expanded="false" aria-controls="collapseModuleManagement">
-        <i class="fas fa-swatchbook"></i>
-        <span style={{fontSize:'14px'}}>Module Management</span>
-    </a>
-    <div id="collapseModuleManagement" className="collapse" aria-labelledby="headingModuleManagement"
-        data-parent="#accordionSidebar">
-        <div className="bg-white py-2 collapse-inner rounded" style={{fontSize:'12px'}}>
-            <h6 className="collapse-header">Modules:</h6>
-            <a className="collapse-item" href="login.html">Registration Config</a>
-        </div>
-    </div>
-</li>
-</ul>
+ 
 
 
- {/*  <!-- End of Sidebar --> */}
 
-                    {/*  <!-- Content Wrapper --> */}
-                    <div id="content-wrapper" className="d-flex flex-column">
+  // useEffect(() => {
+  //   fetchUserData()
+  //     .then((response) => {
+  //       setData(response.data);
+  //       alert("fetch token " + response.data);
+  //     })
+  //     .catch((e) => {
+  //       // localStorage.clear();
+  //       // props.history.push('/');
+  //     });
+  // }, []);
 
-{/*  <!-- Main Content --> */}
-<div id="content">
+  // const logOut = () => {
+  //   localStorage.clear();
+  //   props.history.push('/');
+  // };
 
-    {/*  <!-- Topbar --> */}
-    
-     
+  // This is for fetching user list from the backend
+  const [user, setUsers] = useState([]);
+ // Status dropdown menu
+ const currentStatusOptions = ['Approved', 'Rejected', 'Pending'];
+ // State to manage the filtered users
+ const [filteredUsers, setFilteredUsers] = useState([]);
 
-       
 
-            
-                <div className="dropdown-menu dropdown-menu-right shadow animated--grow-in">
-                    
-                    <div className="dropdown-divider"></div>
-                    <a className="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
-                        <i className="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
-                        Logout
-                    </a>
-                </div>
-       
+  // This is used for searching logic
+  const [searchCriteria, setSearchCriteria] = useState({
+    userName: '',
+    fullName: '',
+    emailid: '',
+    mobileNumber: '',
+    userDesignation: '',
+    otherRole: '',
+    entryDate: '',
+    statusCode: '',
+    currentStatus: '',
+  });
 
-     
+  //For fetching data from backend
+  useEffect(() => {
+    fetch('http://localhost:8082/fetchuser/all')
+      .then((response) => response.json())
+      .then((data) => {
+        setUsers(data);
+        setFilteredUsers(data);
+        setLoading(false);
+      })
+      .catch((error) => {
+        console.error('Error fetching users:', error);
+      });
+  }, []);
+  
+  // Function to handle input change for search criteria
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setSearchCriteria({
+      ...searchCriteria,
+      [name]: value,
+    });
+  };
 
+  // Function to filter users based on search criteria
+  const filterUsers = () => {
+    const filtered = user.filter((u) => {
+      const jsonData = JSON.parse(u.gstr_json_data);
+      return (
+
+        u.gstr_user_name.toLowerCase().includes(searchCriteria.userName.toLowerCase()) &&
+        (jsonData.full_name || '').toLowerCase().includes(searchCriteria.fullName.toLowerCase()) &&
+        (jsonData.emailID || '').toLowerCase().includes(searchCriteria.emailid.toLowerCase()) &&
+        (jsonData.mobile_no || '').includes(searchCriteria.mobileNumber) &&
+        (jsonData.designation || '').toLowerCase().includes(searchCriteria.userDesignation.toLowerCase()) &&
+        (jsonData.otherRoles || '').toLowerCase().includes(searchCriteria.otherRole.toLowerCase()) &&
+        (jsonData.entry_date || '').toLowerCase().includes(searchCriteria.entryDate.toLowerCase()) &&
+        (searchCriteria.currentStatus === '' ||
+          (u.gstr_status === 2 && searchCriteria.currentStatus === 'Approved') ||
+          (u.gstr_status === 0 && searchCriteria.currentStatus === 'Pending') ||
+          (u.gstr_status === 1 && searchCriteria.currentStatus === 'Rejected'))
+      );
+    });
+    setFilteredUsers(filtered);
+  };
+  
+  // Update the filtered users when the search criteria or user data change
+  useEffect(() => {
+    filterUsers();
+  }, [searchCriteria, user]);
+
+  
+  const [userData, setUserData] = useState([]);
+  const [gstr_user_name, setGstrUserName] = useState('');
+
+
+  const [approvalLoading, setApprovalLoading] = useState(false);
+
+  const approveUser = (userName) => {
+    setApprovalLoading(true);
+    axios
+      .post(`http://localhost:8082/fetchuser/updateStatus?gstr_user_name=${userName}`)
+      .then((response) => {
+        // Handle the success response if needed
+        toast.success('User approved successfully');
+
+        // Reload the window after 0.2 seconds (200 milliseconds)
+        setTimeout(() => {
+          window.location.reload();
+        }, 200);
+      })
+      .catch((error) => {
+        console.error('Error rejecting user:', error);
+        toast.error('Error rejecting user');
+      })
+      .finally(() => {
+        setApprovalLoading(false);
+      });
+  };
+
+
+
+
+
+
+  const [showRejectModal, setShowRejectModal] = useState(false);
+  const [rejectionReason, setRejectionReason] = useState('');
+  const [userName, setUserName] = useState(''); // Set the initial value appropriately
+
+  const handleUserReject = () => {
+    setLoading(true);
+    axios
+      .post(`http://localhost:8082/fetchuser/rejectUser?gstr_user_name=${userName}&rejectionReason=${rejectionReason}`)
+      .then((response) => {
+        toast.success('User rejected successfully');
+        handleRejectModalClose();
+        window.location.reload();
+      })
+      .catch((error) => {
+        toast.error('Error rejecting user');
+      })
+      .finally(() => {
+        setLoading(false); // Set loading to false after the API request is complete
+      });
+  };
+
+
+  const handleRejectModalOpen = (userName) => {
    
-    {/*  <!-- End of Topbar --> */}
+    setUserName(userName);
+    setRejectionReason(''); // Clear the previous rejection reason
+    setShowRejectModal(true);
+   
+  };
+  
 
-                  
+  const handleRejectModalClose = () => {
+    setShowRejectModal(false);
+    setUserName('');
+    setRejectionReason('');
+  };
 
-                            {/* <!-- Begin Page Content --> */}
-                            <div className="container-fluid">
 
-                                {/*  <!-- Page Heading --> */}
-                                <div className="d-sm-flex align-items-center justify-content-between mb-4">
-                                   
-                                </div>
+   const handleTransferData = () => {
+        axios.post('http://localhost:8080/api/transfer-data')
+            .then(response => {
+                console.log(response.data);
+                // Handle success if needed
+            })
+            .catch(error => {
+                console.error(error);
+                // Handle error if needed
+            });
+    };
 
-                        </div>
-                        
 
-                    </div>
-                 
-</div>
-                </div>
-                {/*  <!-- End of Page Wrapper -->
+  
+  
+  return (
+    <div className='main-main-container'>
+    <div className='master-container'>
+      <div className='newUser'>
+        <div className='table-box' style={{ marginTop: '-22rem', height: '540px', overflowY: 'scroll',border:'1px solid black' }}>
+          <table className='f1-table'>
+            <thead className='sticky-header' style={{ position: 'sticky', top:'0', zIndex: 1 }}>
+              <tr>
+                <th>User ID</th>
+                <th>User Name</th>
+                <th>Email Id</th>
+                <th>Mobile Number</th>
+                <th>Role Requested</th>
+                <th>Other Roles</th>
+                <th>Requested Date</th>
+                <th>Current Status</th>
+                <th>Actions</th>
+              </tr>
+              <tr>
+                <th>
+                  <input
+                    type='text'
+                    placeholder='Search by ID'
+                    value={searchCriteria.userName}
+                    onChange={(e) => setGstrUserName(e.target.value)}
+                    style={{ width: '170px' , borderRadius:'4px',padding:'8px'}}
+                  />
+                </th>
+                <th>
+                  <input
+                    type='text'
+                    placeholder='Search by Name'
+                    value={searchCriteria.fullName}
+                    onChange={handleInputChange}
+                    style={{ width: '170px' , borderRadius:'4px',padding:'8px'}}
+                  />
+                </th>
+                <th>
+                  <input
+                    type='text'
+                    placeholder='Search by Email'
+                    value={searchCriteria.emailid}
+                    onChange={handleInputChange}
+                    style={{ width: '160px' , borderRadius:'4px',padding:'8px'}}
+                  />
+                </th>
+                <th>
+                  <input
+                    type='text'
+                    placeholder='Search by Mobile Number'
+                    value={searchCriteria.mobileNumber}
+                    onChange={handleInputChange}
+                    style={{ width: '90px' , borderRadius:'4px',padding:'8px'}}
+                  />
+                </th>
+                <th>
+                  <input
+                    type='text'
+                    placeholder='Search by Role Requested'
+                    value={searchCriteria.userDesignation}
+                    onChange={handleInputChange}
+                    style={{ width: '90px' , borderRadius:'4px',padding:'8px'}}
+                  />
+                </th>
+                <th>
+                  <input
+                    type='text'
+                    placeholder='Other Role'
+                    value={searchCriteria.otherRole}
+                    onChange={handleInputChange}
+                    style={{ width: '90px' , borderRadius:'4px',padding:'8px'}}
+                  />
+                </th>
+                <th>
+                  <input
+                    type='text'
+                    placeholder='Search Date'
+                    value={searchCriteria.entryDate}
+                    onChange={handleInputChange}
+                    style={{ width: '90px' , borderRadius:'4px',padding:'8px'}}
+                  />
+                </th>
+                <th>
+                  <select
+                    value={searchCriteria.currentStatus}
+                    onChange={handleInputChange}
+                    style={{ width: '90px' , borderRadius:'4px',padding:'8px'}}
+                  >
+                    <option value=''>Filter by Status</option>
+                    {currentStatusOptions.map((option) => (
+                      <option key={option} value={option}>
+                        {option}
+                      </option>
+                    ))}
+                  </select>
+                </th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredUsers.map((user) => {
+                const jsonData = JSON.parse(user.gstr_json_data);
+                return (
+                  <tr key={user.gstr_user_name}>
+                    <td className="vertical-line" style={{ textAlign: 'left' }}>{user.gstr_user_name}</td>
+                    <td className="vertical-line" style={{ textAlign: 'left' }}>{jsonData.full_name}</td>
+                    <td className="vertical-line" style={{ textAlign: 'left' }}>{jsonData.emailID}</td>
+                    <td className="vertical-line">{jsonData.mobile_no}</td>
+                    <td className="vertical-line">{jsonData.designation}</td>
+                    <td className="vertical-line">{jsonData.otherRoles}</td>
+                    <td className="vertical-line">{jsonData.entry_date}</td>
+                    <td className="vertical-line">
+  {user.gstr_status == 1 && <p style={{backgroundColor:'green'}}> Approved</p> }
+  {user.gstr_status == 0 && <p style={{backgroundColor:'orange'}}> Pending</p>}
+  {user.gstr_status == 2 && <p style={{backgroundColor:'#FF3800'}}> Rejected</p>}
+</td>     <td>
 
-                                <!-- Scroll to Top Button--> */}
-                <a className="scroll-to-top rounded" href="#page-top">
-                    <i className="fas fa-angle-up"></i>
-                </a>
 
-                {/*  <!-- Logout Modal--> */}
-                <div className="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-                    aria-hidden="true">
-                    <div className="modal-dialog" role="document">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
-                                <button className="close" type="button" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                </button>
-                            </div>
-                            <div className="modal-body">Select "Logout" below if you are ready to end your current session.</div>
-                            <div className="modal-footer">
-                                <button className="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-                                <Button style={{marginTop:'5px'}} onClick={() =>logOut()}>Logout</Button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+ <button
+  className='approve-button'
+  onClick={() => approveUser(user.gstr_user_name)}
+  title='Approve User'
+  disabled={approvalLoading || user.gstr_status == 1}
+>
+  <i className='fas fa-check'></i>
+</button>
 
-            </body>
+
+
+
+
+        <button className="button2" onClick={() => handleRejectModalOpen(user.gstr_user_name)} disabled={user.gstr_status == 2}>
+        <i className="fas fa-times"></i> 
+
+      </button>
+                      <button className="button3" disabled  style={{opacity:'0.6'}} >
+                        <i className="fas fa-eye"></i>
+                      </button>
+                      <button className="button4" disabled  style={{opacity:'0.6'}} >
+                        <i className="fas fa-edit"></i>
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
-    )
-}  
+      </div>
+    </div>
+    <Modal show={showRejectModal} onHide={handleRejectModalClose} centered backdrop="static" keyboard={false} dialogClassName="reject-modal">
+  <Modal.Header closeButton>
+    <Modal.Title style={{ fontSize: '20px' }}>Reject User <i style={{color:'red'}} class="fa fa-exclamation-triangle" aria-hidden="true"></i></Modal.Title>
+  </Modal.Header>
+  <Modal.Body>
+    <p className='modaltext' style={{ textAlign: 'center', fontSize: '20px', fontWeight: 'bold' }}>
+      Are you sure you want to reject this user?
+    </p>
+    <br />
+    <p style={{ fontSize: '15px', padding: '4px' }}>Please provide a reason for rejection:</p>
+    <p style={{ fontSize: '12px', padding: '2px' }}> Review user ID </p>
+    <input
+      type="text"
+      readOnly // Make the input read-only
+      style={{
+        width: '48rem',
+        marginLeft: '1rem',
+        marginRight: '1rem',
+        height: '4rem',
+        backgroundColor: 'whitesmoke',
+        marginTop: '1rem',
+        marginBottom: '1rem',
+        borderRadius: '12px',
+        padding: '10px', // Add padding for text
+      }}
+      value={userName}
+    />
+
+    <textarea
+      value={rejectionReason}
+      onChange={(e) => setRejectionReason(e.target.value)}
+      placeholder="Rejection Reason"
+      maxLength={100}
+      style={{
+        width: '48rem',
+        marginLeft: '1rem',
+        marginRight: '1rem',
+        height: '8rem',
+        backgroundColor: 'whitesmoke',
+        marginTop: '1rem',
+        marginBottom: '1rem',
+        borderRadius: '12px',
+        padding: '10px', // Add padding for text
+      }}
+    />
+  </Modal.Body>
+  <Modal.Footer className='modelfooter' style={{ textAlign: 'center' }}>
+    {loading ? (
+      <p style={{ fontSize: '18px' }}>Loading... <i class="fas fa-spinner fa-spin"></i></p> 
+    ) : (
+      <>
+        <Button className='reject' onClick={handleUserReject} disabled={ rejectionReason=='' }>
+          Yes, Reject
+        </Button>
+        <Button className='close' onClick={handleRejectModalClose}>
+          Close
+        </Button>
+      </>
+    )}
+  </Modal.Footer>
+</Modal>
 
 
-export default Dashboard
+
+      <ToastContainer 
+      
+      position="top-center"
+     
+
+hideProgressBar={false}
+newestOnTop={false}
+closeOnClick
+rtl={false}
+
+
+
+theme="light"
+      
+      autoClose={1000} />
+    
+    </div>
+  );
+};
+
+export default  withSessionTimeoutCheck(Dashboard);

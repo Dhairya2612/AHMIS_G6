@@ -6,11 +6,14 @@ import reportWebVitals from './reportWebVitals';
 import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import store from '../src/Component/redux/store';
+import {SessionTimeoutProvider} from '../src/Component/SessionTimeoutContext';
 
 ReactDOM.render(
   <Provider store={store}>
   <React.StrictMode>
+    <SessionTimeoutProvider>
     <App/>
+    </SessionTimeoutProvider>
   </React.StrictMode>
   </Provider>,
   document.getElementById('root')
